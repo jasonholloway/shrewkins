@@ -3,25 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using ICSharpCode.Decompiler.IL;
-using OpCode = System.Reflection.Emit.OpCode;
+using System.Reflection.Metadata;
+using System.Reflection.Metadata.Ecma335;
+using System.Reflection.PortableExecutable;
 
 namespace Shrewkins
 {
     public static class Generator
     {
+        
+        
+        
 
         public static MethodInfo Generate(IEnumerable<Instruction> ins) 
         {
-            var type = AssemblyBuilder
+            var module = AssemblyBuilder
                 .DefineDynamicAssembly(new AssemblyName("assembly"), AssemblyBuilderAccess.Run)
-                .DefineDynamicModule("module")
-                .DefineType("Machine");
+                .DefineDynamicModule("module");
+            
+            var type = module.DefineType("Machine");
 
             var method = type.DefineMethod("Method", MethodAttributes.Public | MethodAttributes.Static);
-            
+
+
             var il = method.GetILGenerator();
 
+//            AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(""), AssemblyBuilderAccess.Run,
+//                new[] {
+//                    new CustomAttributeBuilder(  )
+//                });
+            
             var vars = ins.OfType<VarInstruction>()
                 .Select(i => i.Var) 
                 .Distinct()

@@ -1,0 +1,377 @@
+I feel like I was here not that long ago. Nevertheless...
+
+* Flows
+
+Flows are graphs that can be circular. Or can they - ?
+
+Circularity in execution is something that is worked out through execution; the actual piping, from node to node, is done forwards, though with the possibility of jumping backwards to start again.
+
+The problem here is that something in the future can suddenly inform the past...
+
+With a leap forwards or backwards the environment must leap with us, to be consumed in its new place and form.
+
+The difference with a variable and a mere stack value is that the variable, being in a persistent location, can be loaded whenever by whomever.
+
+Though we do know who reads the stack, as the actions to do so are explicit.
+
+---
+
+the thing is, known actions do their dolloping onto the stack, or to local variables, but at the point of branching, consumptions diverge - flows can go one way or the other - though some flows will remain unaffected
+
+so - branching only affects some flows, not others; but in execution, branches must be followed. I suppose interpretation of flows should be done lazily... there's no point in doing any branching if the flows we care about aren't involved in it... execution isn't imperatively whipped through the program, but rather, we have a node of it, and we want to interpret its results, or rather its value.
+
+which is all fine: this frees us to trace our multipart graph through abstract time, our semi-lattice. 
+
+so - at each branching point, some flows diverge - almost as if the flows are subject to the whims of the branch, which is itself the direct function of only a subset of the available values.
+
+a branch point decides which subprogram to continue to with its own particular bindings
+
+instead of leaping to it by address, we want our branch to refer to its structure, to it as an object. For this to be possible, the subprogram must be cut at the correct point. 
+that is, before a full flow can be granularly traced, subprograms must be sliced by branch.
+
+If we were to slice too finely beforehand, we would be able to trace flows only by means of circularity: a flow (or rather a subset of flows within a movement) would find themselves derailed by a branch point, though i'm not sure what ill effects would follow from such an unmitigated disaster...? 
+
+by cutting at the right points beforehand, we'd realise linearity presumably, which would let us realise a succession of slices. This is the prize: slices in sequence; not a graph in a circuit.
+
+Though the innards of one of these realised sections would still be troublesome. How would such a thing be converted back to IL? Branch points would have to be known and recoded into the eventual output.
+
+Juxtaposition of such granular slices would however be difficult, maybe even impossible: how can a single slice that makes sense only within its own circular subsystem be singled out? Fished from its familiar surroundings it will wither. But a circular program able to be sequenced is monoidal - splodge it together with another and a greater program of the same form will result. 
+
+---
+
+I've been hunting the conception of decomposed programs as methods, which is a pleasant pursuit, and perhaps there are similar chases available? What of applicatives, for instance?
+
+An applicative is the form of an application to an operation, or rather, to a subprogram: it doesn't matter in which order the inputs are sequenced, as long as they are supplied to the consumer as expected. 
+applicatives can then be decoded as can monads. We have this already, almost by default, from our graph.
+
+---
+
+but decomposing into sequential subprograms is the initial dream, and this can only be done by slicing our greater program into vertical islands of recursion. One thing gets done, then another...
+
+though we'll be blown out of the water by any large recursions: if we can only cope with recursions by sidestepping them, by encapsulating them, by a kind of shrinkwrap - then we can only happily deal with a small number of posisbilities. We would flowify our IL into sequential lumps, and internal within these other programs would form circuits, flowing from one to another. This is the vision: programs only being of a certain kind given certain contrained innards.
+
+Subprograms composed in a loop are still programs, fully fledged, but by their composition made relatively intractible. 
+
+Or, at least, tractible only by consering their larger, combined form. 
+
+---
+
+But what's my intent, anyway? To decompose and recombine. I want to cut and shut sequential subprograms, then dice them by amenable yield points. These bulwark lines will then structure the division between stack and local variable, so that my output composed programs can store their state in the most efficient and pleasing manner.
+
+I'm not even sure how recursive programs will be input, except through consideration of the interiors of the component sausages.
+
+But as a preliminary to my synthesis, I want to be able to render down clumpy composite inputs to their component sections, which can then be pleasantly sequenced together via mediation.
+
+A yield point within a loop (a certain possibilty) is a concern, though maybe not really a problem, in that even the most circuituous loop is mediated by the normal methods of data transfer.
+
+---
+
+a decomposition into flow can be done without a care for sequence: loops can be representing in the dissolution of analysis as well as anything as anything else. We want to dissolve everything first, certainly. But such a multipart flow is dictated by branching, is articulated by branching. What comes first, the flow or the branch? Ican only think they occur together. But tot recurse throuh a subprogram, we need a target in the first instance. Programs usually proceed through this challenge by indirection: a concrete address is used to refer back to a previous stage, and only through resolution of this address will the loop be realised.
+
+Every IL operation encountered does /something/... the change will be to link these operations in ways other than direct sequence - indirect means, force at a distance.
+
+If we could figure out where loops occur, these islands of recursion... we could present each such subprogram as a sequential slice. After this, graphs could be afforded (in fact, they would have to be so, as we need to represent code somehow, and how would we know where loops occur if not by such analysis?) So a total flow analysis is initially requisite, from which the limits of loops can be delineated. Any operations that jump provide good first articulations. Find all the leaps, and map these to subprograms. The problem with this approach is that it ignores the partiality of branching: not all flows branch together, some persist in their steadfast forward movement across time despite the tarrying of minor vortices besides them.
+
+If loops are going to be traced in terms of flows, as they surely should be, we should trace the flows firstly, and then detect recursions within them, flow by flow. And further, recursions of the same shape and punctuality in their appearance and disapperance should be acknowledged as siblings. That is, a woolly loop of similar loops should be resolved into one.
+
+In fact flows aren't independent in either their forward flow or in their recursion: one can't go back while another progresses forwards, all are dictated to by the same tactical hotspots of decision.
+
+As batches they're directed in their ways. So branches form steeplechase fences over which all horses must leap, though some its seems can course off to the side and make their own pace. 
+
+So flows are traced forwards, and occasionally they meet fences in the form of branches (in fact this is often so). At first analysis, all branches are affected by every such horizontal hurdle: the course of each flow is interrupted by a special node that holds most flows in thrall to a sibling flow in particular. Then I imagine a secondary stage that oprimises to make some flows carry on in their forward path. At this point, such groupings of flow will be articulated by the branch itself. Or rather - the branch will only positively articulate itself within affected flows - others will plow forwards regardless.
+
+This will be easily optimised into place by observing situations where two branched flows are identical in form. But every operation is unique, unless its inputs are identical.
+
+First though the lousy method of effusive, expansive mapping of paths; then the optimisation.
+
+And after the optimisation, the rematerialisation into IL code at the other side, after all the transformations we wish to effect.
+
+---
+
+But first we want the most basic decompisition and recomposition - a simple roundtrip as the basis for others.
+
+So what comes first, flows with basic, total branching? I believe so. As said previously, flows encode loops. A simple, total branch is a small subprogram in itself, in that all possible variables flow into its brick wall of decision, and multiple flows emerge from the other side, albeit grouped by modularity. If the switch swings one wat, all flows flow in that manner; in the other, the flows similarly follow. What are these subsequent wings of decision? Scenarios, perhaps. No - simply, branches. Each branch is a world, an environment in itself, and as such is the contextual owner and container of multiple flows. Is a branch as such also a flow at a greater scale? It's a flow of environment. A flow of environment that proceeds on to the next nodal switch point. Each switch point takes in the full environment (as standard, as a ready default) and outputs a single environmental flow of two (or more indeed) possible types - each type is an environmental outcome.
+
+--------------------
+
+If a branch-point is a function returning a bundle of flows, our knowing articulation of flows intrudes into the type system of values, which up till now has been identical with that of the CLR.
+
+The branch returns, effectively, a continuation, a program pre-bound.
+
+So the flows go into the branch, and out plops a single flow, but of an interesting composite type.
+
+CLR types are primitives in this conception, while types of bundled flows are complex.
+
+A conflux of flows groups together flows to be treated as an interpretable whole. the Conflux is itself a Program, which can be looked into and resolved through working with it in its graph.
+
+So the bundling of flows, which is itself a strange intractible notion, makes sense when refigured as a program in more utilitarian clothes.
+
+A program is always to be interpreted. If a program outputs a program (as a branch would) this program must itself be resolved before being materialised into code.
+
+If we start off with a single method, this is itself a Program, an ILMethod, which will be specially flattened when condensed (or even better, won't be condensable whatsoever, without dissolution first into less recondite, fluent parts).
+
+But, two branches in a row - these will be represented by nested programs.
+
+And even at the first branch, the types of the possible flows are uncertain without looking inside the eventual program. But - this isn't the case. At each point of such branching, we have a sum type of programs, an either-or. And the programs in each branch of the branch can be interpreted in place as data - that is, directly, without evaluation.
+
+A branch always offers two possible subprograms as continuations.
+
+---
+
+at first, all flows are taken to be processed by a branch, but really some kind of pass of the graph should be able to simplify these out, to untangle them.
+
+---
+
+if graphs are to be passed over and transformed, then there should be a straight forward method of firstly constructing them, and then doing the mutation.
+
+basically: mutable first - OR - how about having a table of edges, that were then formed intoa graph on demand. This would allow us to declare edges and nodes, replace them simply and directly.
+
+Instead of maintaining data on stateful nodes, we can deal with each individually, and rely on updates propagating to the proper places.
+
+------
+
+Back to the Branch:
+
+A Branch returns a choice of Programs. If a Branch does this, doesn't it mean that /all/ operations must return programs too?
+It's just that usually there's only one possible outcome.
+
+This is fairly similar to expressions returning expressions. The cascade of programs is to be followed.
+
+But then we want to refactor em. We begin with total,environment-affecting branches, that take each possible value as input, and fold them into their output programs.
+
+Some of the flows captured hereby are separable, that is, they don't have to be routed via this particular program.
+Opportunities to unbundle these would be found in cases of duplication, of exactly the same subflowsbeing found across program boundaries. In fact this very problem of bundling and unbundling touches the heart of the matter: the problem is to separate programs from flows. Flows exist within programs as interior sinews, and connect up the programs within them, nested. 
+
+If a program has taken some of its input sinews within itself unnecessarily, we should prefer separating them out. For instance - a sinew that goes directly from input to output is pointless to the containing program. The outer program may be relying on this mediated flow, but unnecessarily. 
+
+The branch then becomes an operation creating two subprograms in its wake; but the subprograms at this initial state of decomposition aren't narrow slices, minimally granular - instead they reach as far as need be, enclosing vast swathes. What happens if a single side of the branch's output has a needlessly-included sinew? Then that one sinew can hardly be popped out by itself. The bifurcated program is still itself the program here under connsideration for disentangling, not either of its bifurcations individually.
+
+So the /face/ of the program remains the branch; and only if the outputs at its full posteriority show no intermediate processing to a sinew can be popped out. But under the conception of operations returning programs, all progress is via nested continuations, and so no yielding is done back to the container except for at the very end of the greater program. Well, this is the default decomposition, that is always available, always possible, always complete in its representation of the concrete problem.
+
+But if we are to work the problematic program, we need to abstract from its concreteness: we need to pierce through it with dimensions, along which elements can be freely swapped, compared like-for-like. Not dimensions necessarily, but laws, that spread throughout the /stuff/ and make it tractable.
+
+And for this, the elements within it need to yield; programs must at some point form flat slices, juxtaposable as two lengths of sausage.
+
+---
+
+The branch is not like this: it is the point where flat progress splits into two. It is the foremost articulation of the program in its intractability. But sometimes, in certain frequent cases, a branch can be skimmed over, can be wrapped so as to be ignored, keeping the procession simple. Though branches generally can't be /suppressed/ - they must remain in place, awkwardly. But rather, instead of allowing their divergence to rule all subsequent subprograms, their containing mileau of code can be sliced such that the rear of the greater program regathers some simplicity.
+
+Though is this ever true: I'm imagining a portion of branches can be ignored as their effects do not reverberate past a certain point. If this were so, they would be completely pointless. All code exists because of its effect on the output of the program; if no difference were felt far down the path of execution there'd be no point in that code's original existence. We can take it as said in every case that branches have pointful effects. They can't be ignored, only subsumed into greater constructions.
+
+---
+
+All possible articulations must remain in place, though the routes to these destinations should be maximally unbundled and simplified. 
+
+At first we maximally /bundle/ branch operations for the sheer simplicity of it. 
+
+---
+
+But there's gotta be /yielding/ for us to economise the bundling, as without returning to the same scope, all necessarily goes inwards, all necessarily is consumed. 
+
+So where do programs yield, where can we safely say they don't just return subprograms as continuations?
+
+It doesn't matter that a branch has an effect later on - as all operations must - what matters are changes to flows.
+
+If all that a branch does is decide what string gets passed to a function, then that branching is conveniently localised.
+
+What were originally entire subprograms, subschemes of flows going in whatever way, now the difference in the schemes is curtailed to a certain range. So, by default, each branch should result in a complete bifurcation. But then we can have a best attempt reunification, localising as best we can the trouble of two paths.
+
+A two-part operation: by default split all succeeding code, then glue back together best we can.
+
+But this would be much more efficient if we were open to reglueing and rejoining as soon as possible. Do we have to lookup from final roots before deciding? A pen, some paper, and asome simple examples needed.
+
+---
+
+A tree of subprograms is a true representation of a larger program. Each subprogram would take in, most simply, a full environment of variables. Then the subprogram would (in its er, simplicity) extract would from the environement and afterwards reinject - ie the passing of an entire environment each time is not a simple thing really.
+
+The dream endpoint is the flat graph layed out in front of us, with easy ways traverse it and to swap out nodes and edges.
+
+---
+
+Is all IL code treelike? Presumably not with arbitrary jumping from here to there.
+
+In which case, the vision of nested subbprograms breaks down somewhat. Or rather, nested subprograms doesn't cover this one case, where in others it might make full sense.
+
+The dimensionality implicit in jumping arbitrarily is therefore a kind of starting point.
+
+Flows in a flat graph are achievable up to branching; branching must modulate these flows en masse - like a semiconductor, taking selective inputs to effect general changes.
+
+The branch node therefore has two kinds of input: or, again, it has one kind of input, and outputs a fresh program.
+but this fights against transparency; the more flows ares tructured into a tree, the less easy it is to follow stuff about.
+though a kind of multiplicity-inside-multiplicity is unavoidable here, as branches build on branches.
+branches are unavoidable steps and articulations
+
+though a flow output of one branch may then refer back to a node before its parent branch; in this case how does it make sense to treat the follow-on as a child of the former; all are equal, if all can be addressed by one another equally - ie the possibility of referring to any node within any program is always there.
+
+Or rather - the parent/child nesting can be realised only if there is no out-of-band referencing. A branched flow that does not refer back to previous flow can be treated as a nested continuation.
+
+---
+
+Flows of data are only half of the picture; we also have paths of execution.
+
+One cannot be reduced to the other of course. Also, flows of data don't have to follow the exact trail of executions, as they can be temporarily stored in locations of memory.
+
+Though paths of execution are of the /first/ importance, they share this importance with their alternative other.
+
+The stack, which is just one of these locations, is just one of the means of flow.
+
+---
+
+Aren't all functions, as they all encapsulate god knows what, effectively branch points? Well, no, in that the point of a procedure is that it guarantees a single path of execution - so if we're tracing flows, we only have to care about one possible route here. The exception is perhaps /exceptions/ - but let's ignore this for now.
+
+But, taking exceptions into account, yes, all function calls are effectively branch points, so singling out branches as being particularly troublesome is wrong. A procedure, loosely conceived, is just a bag of unseen code, and so all the multiplicity of eventualities of any code holds here as everywhere.
+
+Every execution is prone to lead to multiple possible outcomes, or even better - to multiple possible flows. Every single action leads to nested subprograms. It's just that some of them, if we squint by ignoring exceptions, can be simplified and presented flat.
+
+---
+
+If flatness is achieved only by a squint of the eye,how can it be that flatness is absolutely implied by the capacity to randomly jump?
+
+We both begin and end with flatness. We both begin and end with trees. Somewhere inbetween is the most natural representation of the execution.
+
+It should be as flat as possibe, but not /too/ flat.
+So that is, it should be as treelike as possible.
+
+This idea of starting off at one extreme is misguided, as we must take branching into account from the very beginning. /But we begin with IL.../
+and what does IL contain? It is a succession of programs, each one taking a certain input. The problem is that it doesn't just represent data flow, but execution path.
+
+It is entangled from the off, and only interpreted through execution - or is it? If this was so, it blocks off our entire attempt. Are we justified to be so pessimistic? Hardly, given that decompilation is certainly possible.
+
+though maybe there's the inkling of something in this, that to evaluate a program requires interpretation. But then, type systems...
+
+---
+
+Execution proceeds through environments of available values; at the point of branching, environments diverge.
+
+What's the simplest situation?
+
+A single branching operation:
+
+V1 -> B1 -> F1 -> O1
+         \> F2 -> O2
+
+F1 is not the same as F2; it is wildly different
+and so O2 is itself wildly divergent
+
+but, above, we have succeeded in rendering a very flat graph of it.
+
+in making sense of the graph, however, the branch tells us to take a certain path
+though - there's only one path of execution; meanwhile we have multiple abstract flows of data
+
+in the loading of some data froma location, a flow of data is /activated/ - its latent possiblity is touched with the wand of execution and made real
+
+flows are made active or not by the path of flow
+another way of putting it: all flows beyond a branch are conditional
+they're not full, but modified by a kind of context
+
+all flows are then (again) bundled, but along with conditions of activation.
+how can the different parts of a bundle be treated as the same, as having identity?
+at first, before any subsequent behaviour has happened, they are identical, yes, being from the same seed
+but immediately they diverge - how can we say they are identical, but by an operation of comparison
+
+as long as they are identical, they canbe split out from their bundled and reunified in a single parallel flow, rejoining the bundle at a later stage
+
+---
+
+all operations are potential branches; all operations are succeeded by a bundle of divergent flows.
+
+as we parse through the actionsof the IL each flow can spread maximally, with no cohesion whatsoever, only multiplicity and fulsome branching
+
+then, through a repeated comparison of the /stuff/, we gradually separate out and join together otherwise identical flows
+
+---
+
+so flows don't go from node to node, they immediately bifurcate after each and every node of action
+in as much as there are outputs affecting execution path:
+
+a two-way jump has an output articulated in two, as does each operation that can throw an exception; a switch statement or jump table or whatever could have very many.
+
+---
+
+and then, the final complication: arbitrary jumps - how do they marry up the flows? the flows must, i suppose, be represented as circular...
+
+but that for later, eh?
+
+---
+
+*ARBITRARY LEAPS*
+
+at jumps, paths of execution can go wherever. but a jump isn't itself a branch or anything like that; it's just where a flow, of whatever composite variety, can join immediately to another part of its length. As flows are traced out, in order to join them arbitrarily together, each node must be indexed by its original material address - though this can be forgotten after the first total parsing into a flow graph.
+
+the question, as ever, is one of bundling. As the path of execution turns, the entire environment has to follow, though it may be that strands of that environment can be separated out via exahustive cross-comparisons.
+
+an environment is like one big composite flow. At its simplest, each and every operation takes in the entire environment as its input, and outputs an entirely new one.
+
+this environment can then branch about. 
+
+---
+
+so, at the point of remerging, flows go into flows; actions in the future affect the values of times in the past.
+
+so you've got this circularity, like. What've you got? Scenarios after branches, after every action in fact - every time there are multiple possiblities; every possible flow is firstly entangled, bundled together, everything switches. So after a node, there area selection of scenarios - often there will only be one; each one is a possible outcome of the execution. 
+
+and, in each scenario, there are a selection of flows. These flows relate to previous flows, but are organised by the scenarios of outcome around an action.
+
+And then loops are the same, in that they are just the same old layout but recursive. For these loops to be traced in the first place, actions need to have their address, to be looked up arbitrarily.
+
+The primordial action is an explosion, an unfolding of scenarios. An /Unfolding/ - a revelation. 
+
+What would a Scenario look like? It'd have flows, and these would relate to previous flows. An input flow might lead to an unfolding, in which case various scenarios would be there. But would a single flow knowabout the structuring variety of scenarios, or would it only know about the different flows following from itself?
+
+The Action holds the Scenarios, which in turn hold the follow-on flows.
+
+Then we want to loosen up the Scenarios, and then the Actions, from the Flows, so that some Flows just bypass what doesn't concern them.
+
+A double structuring: an action unifies various outcomes, while in each outcome, there are various individual flows.
+
+Maybe a flow naturally diverges in two directions? As in a branch is just a sharing of data as is a shared variable? Surely not: alternate worlds existin parallel and cannot interact. There is a very real choice in the following of a series of unfoldings.
+
+But how will the divergence appear at the level of the individual flow? Flows should go node to node; here flows go to an Unfolding, and from there to subsequents. A flow going into an action isn't necessarily the same as one that comes out of it - things go into some action and simply disappear, evaporate. There's this elision between the input and the output, a black hole that can't be traversed, that shouldn't be followed. What matters is the dependence of individual inputs and outputs.
+
+How can flows ever be presented as being continuous if there's a black hole in the middle of them? Inputs and Outputs would have to have some obvious identity, a common unifiable name at least.
+
+But the best identity is actually being the same uninterrupted thing. The action can simply interrupt a selection of flows, affecting, getting in the way only of what it needs to. But in branching, every possible value must take part, at least at first - that is, in the first instance, a branch is like a total function, both inputting and outputting a complete environment.
+
+Working out only which flows are affected is a secondary activity, as it requires looking ahead and unifying paths. But the mapping of operations is more simple as we have given definitions. What is affected is known up front. Though even the most humble operation unfolds to at least two scenarios. Each operation we come across is effectively a branch point, and as such splits /all/ flows. In this picturing, the rhythm of all flows will be a paradiddle with no quiet. No sense will be gleanable from the mess of constant interruption.
+
+So if all points are potential branches, some tactic better than the naive "let's switch everything" is needed. I suppose, as we work forwards, different possibilities can be worked through naturally in a treelike fashion, as branch after branch is parsed in putative parallel. But so many of the branches will end up at the same point, at the sinkhole of the exception handler, to be all unified in the same shared crucible. Interestingly, this shared endpoint can itself be unified as a join point (in fact it must be so, much like the re-landing points of loops must rejoin the same graph). The unification will be done by looking up nodes by address.
+
+Though - the same point can be reached via very different contexts. Just the fact that it is the same point being trodden over doesn't mean that the same possibile outcomes are available - by the time we revisit a familiar place, we might have accrued more of an environment, allowing us a broader or narrower set of outcomes. By such means is it that computation can be done by recursion - it's not the same thing each time!
+
+The execution of the program is the only concrete fact. So, in forming dataflow, what are we after? A more tractable, graftable representation of code. 
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,22 +1,77 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Metadata;
+using System.Reflection.Metadata.Ecma335;
+using System.Reflection.PortableExecutable;
 using System.Text;
-using ICSharpCode.Decompiler.CSharp.Syntax;
 using JsonLens.Compiler;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 using static Shrewkins.OpMarkers;
 using static Shrewkins.Helpers;
-using OpCode = System.Reflection.Emit.OpCode;
 
 
 namespace Shrewkins
 {
+
+    public class RoslynTests
+    {
+        [Fact]
+        public void BlahBlahBlah() {
+            var peHeader = PEHeaderBuilder.CreateLibraryHeader();
+            
+            var meta = new MetadataBuilder();
+
+            var module = meta.AddModule(1,
+                meta.GetOrAddString("Module1"),
+                meta.GetOrAddGuid(Guid.Parse("11112222-3333-4444-5555-666677778888")),
+                meta.GetOrAddGuid(Guid.Parse("88887777-6666-5555-4444-333322221111")),
+                meta.GetOrAddGuid(Guid.Parse("22223333-4444-5555-6666-777788889999"))
+            );
+            
+            var tObject = meta.AddTypeReference(
+                EntityHandle.ModuleDefinition, 
+                meta.GetOrAddString("System"),
+                meta.GetOrAddString("Object"));
+
+            var fields = new FieldDefinitionHandle(); //EMPTY!!
+            var methods = new MethodDefinitionHandle(); //EMPTY!!
+
+            meta.AddTypeDefinition(
+                TypeAttributes.Class | TypeAttributes.Public, 
+                meta.GetOrAddString("Namespace1"),
+                meta.GetOrAddString("Class1"),
+                tObject, 
+                fields, 
+                methods);
+            
+            meta.GetOrAddString("Module1");
+               
+            
+            
+            var metadataRoot = new MetadataRootBuilder(meta);
+            
+            var ilBlob = new BlobBuilder();
+            ilBlob.WriteByte(0);
+            ilBlob.WriteByte(42);
+            
+            var pe = new ManagedPEBuilder(peHeader, metadataRoot, ilBlob);
+
+            var blob = new BlobBuilder();
+            pe.Serialize(blob);
+
+            Assembly.Load(blob.ToArray());
+        }
+
+    }
+    
+            
+            
+            
     public abstract class Jump
     {
         public static Jump Here<M>() where M : Jump, new() {
@@ -195,21 +250,11 @@ namespace Shrewkins
         }
 
 
-        
-
-        public static LinkedList<Instruction> ReadStaticMethod(Expression<Action> exp) 
-        {
-            var method = ((MethodCallExpression)exp.Body).Method;
-            var body = method.GetMethodBody();
-            return Reader.Read(method.Module, body, body.GetILAsByteArray());
-        }
-        
-
         [Fact]
         public void Conjoining() 
         {
-            var prog1 = ReadStaticMethod(() => Mooo());
-            var prog2 = ReadStaticMethod(() => Plop());
+            var prog1 = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => Mooo());
+            var prog2 = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => Plop());
             
             var conjoined = new LinkedList<Instruction>(prog1.Concat(prog2));
             
@@ -250,7 +295,7 @@ namespace Shrewkins
         [Fact]
         public void Regen_LocalStaticMethods() 
         {
-            var prog = ReadStaticMethod(() => CallsLocalStaticMethod());
+            var prog = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => CallsLocalStaticMethod());
             _output.WriteLine(OpPrinter.Print(prog));
 
             Verifier.Verify(prog);
@@ -268,7 +313,7 @@ namespace Shrewkins
         [Fact]
         public void Regen_WithLocal() 
         {
-            var prog = ReadStaticMethod(() => ParpyParpParp());
+            var prog = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => ParpyParpParp());
             _output.WriteLine(OpPrinter.Print(prog));
 
             var generated = Generator.Generate(prog);
@@ -293,7 +338,7 @@ namespace Shrewkins
         [Fact]
         public void Regen_Simplest() 
         {
-            var prog = ReadStaticMethod(() => Krrumpt());
+            var prog = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => Krrumpt());
 
             var generated = Generator.Generate(prog.Cast<BasicInstruction>());
 
@@ -303,6 +348,7 @@ namespace Shrewkins
         public static void Krrumpt() {
             return;
         }
+        
         
         
     }
