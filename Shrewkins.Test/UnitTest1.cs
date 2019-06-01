@@ -9,6 +9,7 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using JsonLens.Compiler;
 using Shouldly;
+using Shrewkins.Test;
 using Xunit;
 using Xunit.Abstractions;
 using static Shrewkins.OpMarkers;
@@ -212,7 +213,7 @@ namespace Shrewkins
             Module = module;
         }
     }
-    
+
 
     public class UnitTest1
     {
@@ -227,9 +228,9 @@ namespace Shrewkins
         public void Pointless1() {
             var type = typeof(UnitTest1);
             var method = type.GetMethod("Plop", BindingFlags.Static | BindingFlags.NonPublic).GetMethodBody();
-            
+
             var els = Reader.Read(type.Module, method, method.GetILAsByteArray());
-            
+
             _output.WriteLine(OpPrinter.Print(els));
         }
 
@@ -251,20 +252,18 @@ namespace Shrewkins
 
 
         [Fact]
-        public void Conjoining() 
-        {
+        public void Conjoining() {
             var prog1 = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => Mooo());
             var prog2 = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => Plop());
-            
+
             var conjoined = new LinkedList<Instruction>(prog1.Concat(prog2));
-            
+
             _output.WriteLine(OpPrinter.Print(conjoined));
         }
 
 
         [Fact]
-        public void Test1() 
-        {
+        public void Test1() {
             //let's analyse a template
             var tOp = typeof(ReadChar);
             var mTemplate = tOp.GetMethod("Template", BindingFlags.Static | BindingFlags.NonPublic);
@@ -273,7 +272,7 @@ namespace Shrewkins
 
             var body = mTemplate.GetMethodBody();
             var els = Reader.Read(tOp.Module, body, body.GetILAsByteArray());
-            
+
             //1) parse into linked list of ops
             //2) insert labels
             //3) print out
@@ -287,14 +286,13 @@ namespace Shrewkins
                         break;
                 }
             }
-            
+
             _output.WriteLine(sb.ToString());
         }
-        
-        
+
+
         [Fact]
-        public void Regen_LocalStaticMethods() 
-        {
+        public void Regen_LocalStaticMethods() {
             var prog = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => CallsLocalStaticMethod());
             _output.WriteLine(OpPrinter.Print(prog));
 
@@ -311,8 +309,7 @@ namespace Shrewkins
 
 
         [Fact]
-        public void Regen_WithLocal() 
-        {
+        public void Regen_WithLocal() {
             var prog = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => ParpyParpParp());
             _output.WriteLine(OpPrinter.Print(prog));
 
@@ -333,11 +330,10 @@ namespace Shrewkins
             e = d;
             a = e;
         }
-        
-        
+
+
         [Fact]
-        public void Regen_Simplest() 
-        {
+        public void Regen_Simplest() {
             var prog = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => Krrumpt());
 
             var generated = Generator.Generate(prog.Cast<BasicInstruction>());
@@ -348,10 +344,5 @@ namespace Shrewkins
         public static void Krrumpt() {
             return;
         }
-        
-        
-        
     }
-
-
 }

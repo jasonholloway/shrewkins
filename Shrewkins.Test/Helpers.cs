@@ -17,7 +17,8 @@ namespace Shrewkins.Test
         {
             var method = ((MethodCallExpression)exp.Body).Method;
             var body = method.GetMethodBody();
-            return Reader.ReadMethod(method.Module, body, body.GetILAsByteArray());
+//            return Reader.ReadMethod(new Graph(), method);
+            throw new NotImplementedException();
         }
     }
 }

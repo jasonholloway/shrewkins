@@ -8,7 +8,49 @@ using Shrewkins.Test;
 
 namespace Shrewkins
 {
-    public class IlMethod : IProgram
+    public class Graph
+    {
+        public IEnumerable<Node> Inputs;
+        
+        Dictionary<Node, HashSet<Node>> _ins = new Dictionary<Node, HashSet<Node>>();
+        Dictionary<Node, HashSet<Node>> _outs = new Dictionary<Node, HashSet<Node>>();
+        
+        public IEnumerable<Node> GetIns(Node to)
+            => _ins[to];
+        
+        public IEnumerable<Node> GetOuts(Node from)
+            => _outs[from];
+
+
+        public void Link(Node from, Node to) {
+            _outs[from].Add(to);
+            _ins[to].Add(from);
+        }
+
+        public void Unlink(Node from, Node to) {
+            _outs[from].Remove(to);
+            _ins[to].Remove(from);
+        }
+    }
+
+    
+    public class Program : Node
+    {
+        public IEnumerable<Scenario> Scenarios { get; }
+    }
+    
+    public class Scenario : Node
+    {
+    }
+    
+    public abstract class Node
+    {
+    }
+    
+    
+    
+    
+    public class IlMethod : Program
     {
         public Input[] Inputs { get; }
         public Output[] Outputs { get; }
@@ -19,14 +61,9 @@ namespace Shrewkins
             Outputs = outputs;
             Instructions = instructions;
         }
-        
-        IReadOnlyList<ISource> IProgram.Sources => Inputs;
-        IReadOnlyList<ITarget> IProgram.Targets => Outputs;
-        IReadOnlyList<ISource> ITarget.Sources => Inputs;
-        IReadOnlyList<ITarget> ISource.Targets => Outputs;
     }
 
-    public class ParameterInput : ISource 
+    public class ParameterInput
     {
         public ParameterInfo Info { get; }
         public IlMethod Method { get; }
@@ -35,44 +72,11 @@ namespace Shrewkins
             Info = info;
             Method = ilMethod;
         }
-
-        public IReadOnlyList<ITarget> Targets => new ITarget[] {Method};
     }
 
     
-
-    public class Unfolding
-    {
-        public ISource[] Ins;
-        public Scenario[] Scenarios;
-    }
-
-    public class Scenario
-    {
-        public ITarget[] Outs;
-    }
-    
-    public class Operation
-    {
-        public ISource[] Ins;
-        public Unfolding Unfolding;
-    }
-
-    //the connecting of ins to out is the business of the operation
-    //but,in the case of jumps, all flows must differ
-    //as in, all environmental inputs must go in, and must be threaded through the scenarios
-    //but, because of exceptions, each and every operation will drink in the entire environment...
-    //
-    //maybe this is the primitive state of things, and then, through commonalities in paths, flows can be whittled down to the bare minimum
-    //Operations aren't transparent - flows must got through them - but unfoldings of Scenarios /are/!
-    //an unfolding of scenarios takes a raft of inputs,
-    //returns a raft of outputs
-    //
-    //
     
     
-
-
     public static class Reader
     {
         static IReadOnlyDictionary<short, OpCode> _opCodes
@@ -82,8 +86,7 @@ namespace Shrewkins
                 .ToDictionary(o => o.Value);
 
 
-
-        public static IlMethod ReadMethod(MethodInfo method) 
+        public static Program ReadMethod(Graph graph, MethodInfo method) 
         {
             var module = method.Module;
             var body = method.GetMethodBody();
@@ -94,6 +97,11 @@ namespace Shrewkins
                             .ToArray();
             
             var instructions = Read(module, body, body.GetILAsByteArray()).ToArray();
+            
+            //so, here, we'd populate the graph with follow-ons
+            //the program itself would have its scenarios - either it completes or it doesnt
+            //and there would be bindable nodes inside
+            //a program has input nodes and output nodes - these are then linked via the Graph
             
             return new IlMethod(@params, new Output[0], instructions);
         }

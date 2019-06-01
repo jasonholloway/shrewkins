@@ -15,19 +15,19 @@ namespace Shrewkins.Test
     public interface IProgram : ITarget, ISource
     {
         IReadOnlyList<ISource> Sources { get; }
-        IReadOnlyList<ITarget> Targets { get; }
+        IReadOnlyList<Scenario> Scenarios { get; }
     }
     
     
-    public class Slice : IProgram
-    {
-        public IReadOnlyList<ISource> Sources { get; }
-        public IReadOnlyList<ITarget> Targets { get; }
-
-        public Slice() {
-                
-        }
-    }
+//    public class Slice : IProgram
+//    {
+//        public IReadOnlyList<ISource> Sources { get; }
+//        public IReadOnlyList<ITarget> Targets { get; }
+//
+//        public Slice() {
+//                
+//        }
+//    }
 
     public class Input : ISource
     {
