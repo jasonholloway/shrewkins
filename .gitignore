@@ -5,4 +5,5 @@ packages
 .vs
 .vscode
 *.user
+*\#*
 
