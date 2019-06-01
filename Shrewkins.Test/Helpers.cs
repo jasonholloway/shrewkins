@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Shrewkins.Test
 {
-    internal static class Helpers
+    public static class ReaderExtensions
     {
         public static LinkedList<Instruction> ReadStaticMethod(Expression<Action> exp) 
         {
@@ -13,12 +13,10 @@ namespace Shrewkins.Test
             return Reader.Read(method.Module, body, body.GetILAsByteArray());
         }
 
-        public static IlMethod ReadIlMethod(Expression<Action> exp)
+        public static Program ReadIlMethod(this Graph graph, Expression<Action> exp)
         {
             var method = ((MethodCallExpression)exp.Body).Method;
-            var body = method.GetMethodBody();
-//            return Reader.ReadMethod(new Graph(), method);
-            throw new NotImplementedException();
+            return Reader.ReadMethod(graph, method);
         }
     }
 }

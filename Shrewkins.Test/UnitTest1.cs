@@ -14,6 +14,7 @@ using Xunit;
 using Xunit.Abstractions;
 using static Shrewkins.OpMarkers;
 using static Shrewkins.Helpers;
+using static Shrewkins.Test.ReaderExtensions;
 
 
 namespace Shrewkins
@@ -253,8 +254,8 @@ namespace Shrewkins
 
         [Fact]
         public void Conjoining() {
-            var prog1 = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => Mooo());
-            var prog2 = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => Plop());
+            var prog1 = ReadStaticMethod(() => Mooo());
+            var prog2 = ReadStaticMethod(() => Plop());
 
             var conjoined = new LinkedList<Instruction>(prog1.Concat(prog2));
 
@@ -293,7 +294,7 @@ namespace Shrewkins
 
         [Fact]
         public void Regen_LocalStaticMethods() {
-            var prog = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => CallsLocalStaticMethod());
+            var prog = ReadStaticMethod(() => CallsLocalStaticMethod());
             _output.WriteLine(OpPrinter.Print(prog));
 
             Verifier.Verify(prog);
@@ -310,7 +311,7 @@ namespace Shrewkins
 
         [Fact]
         public void Regen_WithLocal() {
-            var prog = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => ParpyParpParp());
+            var prog = ReadStaticMethod(() => ParpyParpParp());
             _output.WriteLine(OpPrinter.Print(prog));
 
             var generated = Generator.Generate(prog);
@@ -334,7 +335,8 @@ namespace Shrewkins
 
         [Fact]
         public void Regen_Simplest() {
-            var prog = global::Shrewkins.Test.Helpers.ReadStaticMethod(() => Krrumpt());
+            
+            var prog = ReadStaticMethod(() => Krrumpt());
 
             var generated = Generator.Generate(prog.Cast<BasicInstruction>());
 

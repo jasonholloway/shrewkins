@@ -36,7 +36,9 @@ namespace Shrewkins
     
     public class Program : Node
     {
-        public IEnumerable<Scenario> Scenarios { get; }
+        public Input[] Inputs { get; protected set; }
+        public Output[] Outputs { get; protected set; }
+        public IEnumerable<Scenario> Scenarios { get; protected set; }
     }
     
     public class Scenario : Node
@@ -52,8 +54,6 @@ namespace Shrewkins
     
     public class IlMethod : Program
     {
-        public Input[] Inputs { get; }
-        public Output[] Outputs { get; }
         public Instruction[] Instructions { get; }
 
         internal IlMethod(Input[] inputs, Output[] outputs, Instruction[] instructions) {
@@ -63,7 +63,7 @@ namespace Shrewkins
         }
     }
 
-    public class ParameterInput
+    public class ParameterInput : Input
     {
         public ParameterInfo Info { get; }
         public IlMethod Method { get; }

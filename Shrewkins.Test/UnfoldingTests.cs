@@ -1,18 +1,17 @@
 using System;
 using System.Linq;
 using Xunit;
-using static Shrewkins.Test.Helpers;
 
 namespace Shrewkins.Test
 {
     public class UnfoldingTests
     {
+        private Graph Graph = new Graph();
 
 
         [Fact]
         public void Wibble() {
-            var m = ReadIlMethod(() => Hello());
-
+            var m = Graph.ReadIlMethod(() => Hello());
         }
 
 

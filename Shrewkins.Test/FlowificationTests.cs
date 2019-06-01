@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
 using Shouldly;
 using Xunit;
-using static Shrewkins.Test.Helpers;
 
 namespace Shrewkins.Test
 {
     public class FlowificationTests
     {
+        private readonly Graph Graph;
+
+        public FlowificationTests() {
+            Graph = new Graph();
+        }
+        
         public static IProgram Flowify(IEnumerable<Instruction> instructions) 
         {
             throw new NotImplementedException();
@@ -18,7 +22,8 @@ namespace Shrewkins.Test
         [Fact]
         public void Read_StaticNoArgs() 
         {
-            var prog = ReadIlMethod(() => StaticNoArgs());
+            var prog = Graph.ReadIlMethod(() => StaticNoArgs());
+            
             prog.Inputs.ShouldBeEmpty();
             prog.Outputs.ShouldBeEmpty();
         }
@@ -31,7 +36,7 @@ namespace Shrewkins.Test
         [Fact]
         public void Read_StaticWithArg() 
         {
-            var prog = ReadIlMethod(() => StaticWithArg(13));
+            var prog = Graph.ReadIlMethod(() => StaticWithArg(13));
             
             prog.Inputs.ShouldHaveSingleItem();
             prog.Outputs.ShouldBeEmpty();
@@ -48,7 +53,7 @@ namespace Shrewkins.Test
         [Fact]
         public void BlahBlahBlah()
         {
-            var program = ReadIlMethod(() => Wibble(13));
+            var program = Graph.ReadIlMethod(() => Wibble(13));
             
         }
 
