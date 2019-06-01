@@ -375,3 +375,17 @@ The execution of the program is the only concrete fact. So, in forming dataflow,
 
 
 
+
+* More Stuff
+	it's alright having 'inputs' and 'outputs' but really each one is a binding
+	the flows transparently link the ports of the programs
+
+	a program's got ports - and only the graph knows about the greater scheme of things
+	so we have the two worlds again: the programs freely suspended in their transparent sea of space
+	and the linkages interpolated
+
+	any optimisations will be in terms of flows, rather than individual programs
+
+	there has to be a distillation phase, optimisation, and then recrystallisation
+	and the simplest case of this is the simple roundtrip
+	of increasingly complicated composite programs
